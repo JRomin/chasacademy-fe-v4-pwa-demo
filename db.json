@@ -1,0 +1,6 @@
+{
+  "todos": [
+    { "id": 1, "title": "Testa PWA offline", "done": false },
+    { "id": 2, "title": "Bygg fetch-anrop", "done": true }
+  ]
+}
