@@ -8,7 +8,7 @@ export default defineConfig({
       devOptions: { enabled: true }, // valfritt: gör att det funkar i dev
       manifest: {
         name: "My Todos PWA",
-        short_name: "todospwa",
+        short_name: "Todos PWA",
         start_url: "/",
         display: "standalone",
         theme_color: "#ffffff",
@@ -19,5 +19,9 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+  server: {
+    allowedHosts: true,
+    host: "0.0.0.0"
+  }
 });
