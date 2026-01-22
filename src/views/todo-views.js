@@ -22,3 +22,13 @@ export function renderTodos(todos) {
     list.appendChild(todoItem);
   });
 }
+
+export function renderAddTodoItem() {
+    return `<div>
+        <label for="title">Title:</label>
+        <input type="text" id="title"><br>
+        <label for="description">Description:</label>
+        <textarea id="description"></textarea><br>
+        <button id="save">Save</button>
+    </div>`;
+}
