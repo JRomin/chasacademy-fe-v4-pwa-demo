@@ -21,7 +21,7 @@ export async function getTodos() {
   }
 }
 
-export async function updateTodo(todoId, todoTitle, isChecked  ) {
+export async function createTodo(todoId, todoTitle, isChecked  ) {
   try {
     const rawResponse = await fetch(API_URL, {
       method: 'POST',
