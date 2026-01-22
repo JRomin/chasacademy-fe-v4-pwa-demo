@@ -1,38 +1,18 @@
 import './style.css'
-import { createTodoElement, getTodos } from './todos.js' 
+
+// Service methods
+import { loadTodos } from './service/todo-service.js'
 
 document.querySelector('#app').innerHTML = `
-  <div>
-    <h1>My tasks of today!</h1>
+  <div class="container">
+    <div id="errorContainer"></div>
+    <h1>Today!</h1>
+    <div id="loadingContainer">Loading...</div>
     <ul id="todos">
     </ul>
   </div>
 `
+let loadingContainer = document.getElementById('loadingContainer');
+let errorContainer = document.getElementById('errorContainer');
 
-function renderTodos(todos) {
-  const list = document.getElementById("todos");
-
-  // Rensa listan innan vi renderar på nytt
-  list.innerHTML = "";
-
-  todos.forEach(todo => {
-    const todoItem = createTodoElement(todo);
-
-    list.appendChild(todoItem);
-  });
-}
-
-function showOfflineMessage(errorMessage) {
-  console.error("error: ", errorMessage);
-}
-
-async function loadTodos() {
-  try {
-    const todos = await getTodos();
-    renderTodos(todos);
-  } catch (error) {
-    showOfflineMessage(error);
-  }
-}
-
-loadTodos();
+loadTodos(loadingContainer, errorContainer);

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/todos";
+const API_URL = "http://pro.local:3001/todos";
 
 export async function getTodos() {
   try {
@@ -21,14 +21,18 @@ export async function getTodos() {
   }
 }
 
-export function createTodoElement(todo) {
-  const li = document.createElement("li");
-
-  li.className = "todo-item";
-
-  li.innerHTML = `
-    <input type="checkbox" disabled>
-    <span style="${todo.done ? "text-decoration: line-through" : ""}">${todo.title}</span>
-  `;
-  return li;
+export async function updateTodo(todoId, todoTitle, isChecked  ) {
+  try {
+    const rawResponse = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id: todoId, title: todoTitle, done: isChecked})
+    });
+  }
+  catch (error) {
+    throw error;
+  }
 }
