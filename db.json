@@ -1,6 +1,19 @@
 {
   "todos": [
-    { "id": 1, "title": "Testa PWA offline", "done": false },
-    { "id": 2, "title": "Bygg fetch-anrop", "done": true }
+    {
+      "id": "47cf7acf-d0ff-42da-9e85-70e92f062dd7",
+      "title": "Testa PWA Offline",
+      "done": false
+    },
+    {
+      "id": "f6534067-2f0a-40f6-91ea-c5318e6f862c",
+      "title": "Använd Fetch API",
+      "done": true
+    },
+    {
+      "id": "f874bb79-6a32-4c3d-b261-9e6a2010750f",
+      "title": "Implementera json-server backend",
+      "done": false
+    }
   ]
 }
