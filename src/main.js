@@ -1,7 +1,8 @@
 import './style.css'
 
 // Service methods
-import { loadTodos } from './service/todo-service.js'
+import { loadTodos, saveTodo } from './service/todo-service.js'
+import { renderAddTodoItem } from './views/todo-views.js';
 
 document.querySelector('#app').innerHTML = `
   <div class="container">
@@ -10,9 +11,21 @@ document.querySelector('#app').innerHTML = `
     <div id="loadingContainer">Loading...</div>
     <ul id="todos">
     </ul>
+    <button id="addItem">+</button>
+    <div id="addContainer"></div>
   </div>
 `
 let loadingContainer = document.getElementById('loadingContainer');
 let errorContainer = document.getElementById('errorContainer');
+let addButton = document.getElementById('addItem');
+addButton.onclick = function() {
+  document.getElementById('addContainer').innerHTML = renderAddTodoItem();
+  let saveButton = document.getElementById('save');
+  saveButton.onclick = function() {
+    let container = document.getElementById('addContainer');
+    saveTodo(container);
+    loadTodos(loadingContainer, errorContainer);
+  }
+}
 
 loadTodos(loadingContainer, errorContainer);
