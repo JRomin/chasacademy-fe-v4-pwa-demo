@@ -21,10 +21,10 @@ let addButton = document.getElementById('addItem');
 addButton.onclick = function() {
   document.getElementById('addContainer').innerHTML = renderAddTodoItem();
   let saveButton = document.getElementById('save');
-  saveButton.onclick = function() {
+  saveButton.onclick = async function() {
     let container = document.getElementById('addContainer');
-    saveTodo(container);
-    loadTodos(loadingContainer, errorContainer);
+    await saveTodo(container);
+    await loadTodos(loadingContainer, errorContainer);
   }
 }
 
