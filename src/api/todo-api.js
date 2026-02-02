@@ -41,7 +41,5 @@ export async function createTodo(todoId, todoTitle, isChecked  ) {
     offlineQueue.push(newTodoItem);
 
     localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
-
-    //throw error;
   }
 }
