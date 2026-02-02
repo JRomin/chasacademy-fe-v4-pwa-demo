@@ -1,4 +1,4 @@
-const API_URL = "http://pro.local:3001/todos";
+const API_URL = "http://localhost:3001/todos";
 
 export async function getTodos() {
   try {
