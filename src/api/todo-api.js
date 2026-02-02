@@ -9,15 +9,17 @@ export async function getTodos() {
     }
 
     const todos = await response.json();
+    localStorage.setItem('todos-cache', JSON.stringify(todos));
     return todos;
 
   } catch (error) {
     console.error("Failed to fetch todos:", error);
+    return JSON.parse(localStorage.getItem('todos-cache')) || [];
 
     // Viktigt för PWA:
     // Vi kastar felet vidare så UI kan avgöra
     // om data ska hämtas från cache / visa offline-meddelande
-    throw error;
+//    throw error;
   }
 }
 
