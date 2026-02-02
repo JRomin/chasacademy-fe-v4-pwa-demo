@@ -1,7 +1,7 @@
 import './style.css'
 
 // Service methods
-import { loadTodos, saveTodo } from './service/todo-service.js'
+import { loadTodos, saveTodo, syncOfflineTodos } from './service/todo-service.js'
 import { renderAddTodoItem } from './views/todo-views.js';
 
 document.querySelector('#app').innerHTML = `
@@ -29,3 +29,7 @@ addButton.onclick = function() {
 }
 
 loadTodos(loadingContainer, errorContainer);
+
+window.addEventListener("online", function() {
+  syncOfflineTodos(loadingContainer, errorContainer)
+});

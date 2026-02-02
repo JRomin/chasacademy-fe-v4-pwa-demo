@@ -24,6 +24,7 @@ export async function getTodos() {
 }
 
 export async function createTodo(todoId, todoTitle, isChecked  ) {
+  let newTodoItem = {id: todoId, title: todoTitle, done: isChecked};
   try {
     const rawResponse = await fetch(API_URL, {
       method: 'POST',
@@ -31,10 +32,16 @@ export async function createTodo(todoId, todoTitle, isChecked  ) {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id: todoId, title: todoTitle, done: isChecked})
+      body: JSON.stringify(newTodoItem)
     });
   }
   catch (error) {
-    throw error;
+    let offlineQueue = localStorage.getItem("todos-queue") || [];
+
+    offlineQueue.push(newTodoItem);
+
+    localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
+
+    //throw error;
   }
 }

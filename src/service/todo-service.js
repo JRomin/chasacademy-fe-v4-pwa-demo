@@ -24,3 +24,16 @@ export async function saveTodo(todoContainer) {
         errorContainer.innerHTML = error.message;
     }
 }
+
+export async function syncOfflineTodos(loadingContainer, errorContainer) {
+  let offlineCache = JSON.parse(localStorage.getItem("todos-queue")) || [];
+
+  if (offlineCache.length == 0) return;
+
+  for(let i=0;i<offlineCache.length;i++) {
+    let currentTodoItem = offlineCache[i];
+    await createTodo(self.crypto.randomUUID(), currentTodoItem.title, currentTodoItem.done);
+  };
+  localStorage.removeItem("todos-queue");
+  await loadTodos(loadingContainer, errorContainer)
+}
