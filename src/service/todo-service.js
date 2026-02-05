@@ -3,12 +3,14 @@ import { renderTodos } from '../views/todo-views.js';
 
 export async function loadTodos(loadingContainer, errorContainer) {
   try {
-    loadingContainer.innerHTML = 'Loading...';
+    loadingContainer.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">Loading</span>';
     const todos = await getTodos();
     renderTodos(todos);
     loadingContainer.innerHTML = '';
   } catch (error) {
     loadingContainer.innerHTML = '';
+    errorContainer.classList.remove('invisible');
+    errorContainer.classList.remove('d-none');
     errorContainer.innerHTML = error.message;
   }
 }
@@ -21,6 +23,8 @@ export async function saveTodo(todoContainer) {
         document.getElementById('addContainer').innerHTML = '';
     } catch (error) {
       console.error(error);
+      errorContainer.classList.remove('invisible');
+      errorContainer.classList.remove('d-none');
       errorContainer.innerHTML = error.message;
     }
 }
@@ -43,10 +47,15 @@ export async function syncOfflineTodos(loadingContainer, errorContainer) {
   console.log("Sync status: "+syncFailed);
   if (!syncFailed) {
     localStorage.removeItem("todos-queue");
-  }
-  try {
-    await loadTodos(loadingContainer, errorContainer);
-  } catch(error) {
-    console.log("Error when loading in sync: "+error);
+    try {
+      await loadTodos(loadingContainer, errorContainer);
+    } catch(error) {
+      console.log("Error when loading in sync: "+error);
+    }
+  } else {
+    setTimeout(function() {
+      // Testa att sync:a igen efter 5 sekunder.
+      syncOfflineTodos(loadingContainer, errorContainer);
+    }, 5000);
   }
 }
