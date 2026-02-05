@@ -1,4 +1,6 @@
 import './style.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap';
 
 // Service methods
 import { loadTodos, saveTodo, syncOfflineTodos } from './service/todo-service.js'
@@ -7,7 +9,7 @@ import { loginUser } from './api/auth-api.js';
 
 document.querySelector('#app').innerHTML = `
   <div class="container">
-    <div id="errorContainer"></div>
+    <div id="errorContainer" class="alert alert-danger invisible d-none" role="alert"></div>
     <h1>Today!</h1>
     <div>
     <label for="colorMode">Färg-läge:</label>
