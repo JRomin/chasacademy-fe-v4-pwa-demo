@@ -1,4 +1,4 @@
-import './style.css'
+//import './style.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap';
 
@@ -11,17 +11,17 @@ document.querySelector('#app').innerHTML = `
   <div class="container">
     <div id="errorContainer" class="alert alert-danger invisible d-none" role="alert"></div>
     <h1>Today!</h1>
-    <div>
-    <label for="colorMode">Färg-läge:</label>
-    <select id="colorMode">
-    <option value="light">Ljus</option>
-    <option value="dark">Mörk</option>
-    </select>
+    <div class="input-group">
+    <label class="form-label" for="colorMode">Färg-läge:</label>
+      <select class="form-select" id="colorMode">
+        <option value="light">Ljus</option>
+        <option value="dark">Mörk</option>
+      </select>
     </div>
     <div id="loadingContainer">Loading...</div>
-    <ul id="todos">
+    <ul id="todos" class="list-group list-group-flush mt-2">
     </ul>
-    <button id="addItem">+</button>
+    <button class="btn btn-primary" id="addItem">+</button>
     <div id="addContainer"></div>
   </div>
 `
@@ -29,12 +29,18 @@ let loadingContainer = document.getElementById('loadingContainer');
 let errorContainer = document.getElementById('errorContainer');
 let addButton = document.getElementById('addItem');
 addButton.onclick = function() {
-  document.getElementById('addContainer').innerHTML = renderAddTodoItem();
-  let saveButton = document.getElementById('save');
-  saveButton.onclick = async function() {
-    let container = document.getElementById('addContainer');
-    await saveTodo(container);
-    await loadTodos(loadingContainer, errorContainer);
+  let addContainer = document.getElementById('addContainer');
+  if (addContainer.childNodes.length > 0) {
+    // Clear children
+    addContainer.replaceChildren();
+  } else {
+    addContainer.innerHTML = renderAddTodoItem();
+    let saveButton = document.getElementById('save');
+    saveButton.onclick = async function() {
+      let container = document.getElementById('addContainer');
+      await saveTodo(container);
+      await loadTodos(loadingContainer, errorContainer);
+    }
   }
 }
 
