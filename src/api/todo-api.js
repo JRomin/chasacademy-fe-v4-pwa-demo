@@ -2,31 +2,40 @@ const API_URL = "http://localhost:3001/todos";
 
 export async function getTodos() {
   try {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const todos = await response.json();
+    const todos = await apiRequest(API_URL);
     localStorage.setItem('todos-cache', JSON.stringify(todos));
     return todos;
 
   } catch (error) {
-    console.error("Failed to fetch todos:", error);
-    return JSON.parse(localStorage.getItem('todos-cache')) || [];
+    if (error instanceof TypeError) {
+      console.error("Failed to fetch todos:", error);
+      return JSON.parse(localStorage.getItem('todos-cache')) || [];
+    }
+    else {
+      throw error;
+    }
+  }
+}
 
-    // Viktigt för PWA:
-    // Vi kastar felet vidare så UI kan avgöra
-    // om data ska hämtas från cache / visa offline-meddelande
-//    throw error;
+export async function apiRequest(requestUrl, options = {}) {
+  const response = await fetch(requestUrl, options);
+
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+  try {
+    const responseData = await response.json();
+    return responseData;
+
+  } catch (error) {
+    throw error;
   }
 }
 
 export async function createTodo(todoId, todoTitle, isChecked  ) {
   let newTodoItem = {id: todoId, title: todoTitle, done: isChecked};
   try {
-    const rawResponse = await fetch(API_URL, {
+    const rawResponse = await apiRequest(API_URL, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -36,10 +45,19 @@ export async function createTodo(todoId, todoTitle, isChecked  ) {
     });
   }
   catch (error) {
-    let offlineQueue = localStorage.getItem("todos-queue") || [];
+    let offlineQueue = JSON.parse(localStorage.getItem("todos-queue")) || [];
+    let syncItemFound = false;
+    for(let i=0;i<offlineQueue.length;i++) {
+      let currentSyncItem = offlineQueue[i];
+      if (currentSyncItem.syncId === todoId) syncItemFound = true;
+    }
 
-    offlineQueue.push(newTodoItem);
+    if (!syncItemFound) {
+      console.log("Add sync item with id: "+todoId);
+      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId});
+    }
 
     localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
+    throw error;
   }
 }
