@@ -14,7 +14,7 @@ export function renderTodos(todos) {
   const list = document.getElementById("todos");
 
   // Rensa listan innan vi renderar på nytt
-  list.innerHTML = "";
+  //list.innerHTML = "";
 
   todos.forEach(todo => {
     const todoItem = createTodoElement(todo);

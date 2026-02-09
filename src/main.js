@@ -21,6 +21,7 @@ document.querySelector('#app').innerHTML = `
     <div id="loadingContainer">Loading...</div>
     <ul id="todos" class="list-group list-group-flush mt-2">
     </ul>
+    <div id="load-trigger"></div>
     <button class="btn btn-primary" id="addItem">+</button>
     <div id="addContainer"></div>
   </div>
@@ -43,6 +44,8 @@ addButton.onclick = function() {
     }
   }
 }
+
+let currentPage = 0;
 
 loadTodos(loadingContainer, errorContainer);
 
@@ -83,3 +86,16 @@ self.addEventListener("fetch", (event) => {
     )
   );
 });
+
+const observer = new IntersectionObserver(
+  async entries => {
+    if (entries[0].isIntersecting) {
+      currentPage += 1;
+      await loadTodos(loadingContainer, errorContainer, currentPage);
+    }
+  }
+);
+
+observer.observe(
+  document.querySelector("#load-trigger")
+);

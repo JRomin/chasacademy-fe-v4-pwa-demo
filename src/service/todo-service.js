@@ -1,10 +1,11 @@
 import { createTodo, getTodos } from '../api/todo-api.js'
 import { renderTodos } from '../views/todo-views.js';
 
-export async function loadTodos(loadingContainer, errorContainer) {
+export async function loadTodos(loadingContainer, errorContainer, page = 0, pageSize = 5) {
   try {
     loadingContainer.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">Loading</span>';
-    const todos = await getTodos();
+    let todos = await getTodos();
+    todos = todos.slice(page * pageSize, (page+1)*pageSize);
     renderTodos(todos);
     loadingContainer.innerHTML = '';
   } catch (error) {
