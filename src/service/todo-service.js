@@ -71,6 +71,12 @@ export async function syncOfflineTodos(loadingContainer, errorContainer) {
       if (currentTodoItem.syncOperation == 'create') {
         await createTodo(currentTodoItem.todoItem.id, currentTodoItem.todoItem.title, currentTodoItem.todoItem.done);
       }
+      if (currentTodoItem.syncOperation == 'update') {
+        await updateTodo(currentTodoItem.todoItem.id, currentTodoItem.todoItem.title, currentTodoItem.todoItem.done);
+      }
+      if (currentTodoItem.syncOperation == 'delete') {
+        await deleteTodo(currentTodoItem.todoItem.id);
+      }
     } catch(error) {
       syncFailed = true;
       currentTodoItem.retries++;

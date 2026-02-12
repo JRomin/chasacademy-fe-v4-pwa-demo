@@ -83,6 +83,7 @@ export async function deleteTodo(todoId) {
 
     if (!syncItemFound) {
       console.log("Add sync item with id: "+todoId);
+      let newTodoItem = {id: todoId, title: '', done: false};
       offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: "delete"});
     }
 
