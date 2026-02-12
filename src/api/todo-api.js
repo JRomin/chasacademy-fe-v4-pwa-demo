@@ -32,6 +32,36 @@ export async function apiRequest(requestUrl, options = {}) {
   }
 }
 
+export async function updateTodo(todoId, todoTitle, isChecked) {
+  let newTodoItem = {id: todoId, title: todoTitle, done: isChecked};
+  try {
+    const rawResponse = await apiRequest(`${API_URL}/${todoId}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTodoItem)
+    });
+  }
+  catch (error) {
+    let offlineQueue = JSON.parse(localStorage.getItem("todos-queue")) || [];
+    let syncItemFound = false;
+    for(let i=0;i<offlineQueue.length;i++) {
+      let currentSyncItem = offlineQueue[i];
+      if (currentSyncItem.syncId === todoId) syncItemFound = true;
+    }
+
+    if (!syncItemFound) {
+      console.log("Add sync item with id: "+todoId);
+      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId});
+    }
+
+    localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
+    throw error;
+  }
+}
+
 export async function createTodo(todoId, todoTitle, isChecked  ) {
   let newTodoItem = {id: todoId, title: todoTitle, done: isChecked};
   try {
