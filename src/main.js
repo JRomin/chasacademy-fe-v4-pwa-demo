@@ -5,7 +5,7 @@ import 'bootstrap';
 // Service methods
 import { loadTodos, saveTodo, syncOfflineTodos } from './service/todo-service.js'
 import { renderAddTodoItem } from './views/todo-views.js';
-import { loginUser } from './api/auth-api.js';
+//import { loginUser } from './api/auth-api.js';
 
 document.querySelector('#app').innerHTML = `
   <div class="container">
