@@ -1,12 +1,25 @@
+import { setTodoItemDone } from "../service/todo-service";
+
 export function createTodoElement(todo) {
   const li = document.createElement("li");
 
   li.className = "list-group-item";
 
-  li.innerHTML = `
-    <input class="form-check-input" type="checkbox" ${todo.done ? "checked" : ""}>
-    <span style="${todo.done ? "text-decoration: line-through" : ""}">${todo.title}</span>
-  `;
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.checked = todo.done;
+  input.dataset.todoId = todo.id;
+  input.onclick = function() {
+    setTodoItemDone(this);
+  }
+
+  const span = document.createElement('span');
+  span.style = todo.done ? "text-decoration: line-through" : "";
+  span.innerHTML = todo.title;
+
+  li.appendChild(input);
+  li.appendChild(span);
+
   return li;
 }
 
