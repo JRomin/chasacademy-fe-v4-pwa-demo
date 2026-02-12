@@ -1,4 +1,4 @@
-import { createTodo, getTodos } from '../api/todo-api.js'
+import { createTodo, getTodos, updateTodo } from '../api/todo-api.js'
 import { renderTodos } from '../views/todo-views.js';
 
 export async function loadTodos(loadingContainer, errorContainer, page = 0, pageSize = 5) {
@@ -28,6 +28,28 @@ export async function saveTodo(todoContainer) {
       errorContainer.classList.remove('d-none');
       errorContainer.innerHTML = error.message;
     }
+}
+
+export async function setTodoItemDone(todoItemContainer) {
+  let todoId = todoItemContainer.dataset.todoId;
+  let couldUpdateTodo = false;
+  let todoItemState = false;
+
+  let todos = JSON.parse(localStorage.getItem("todos-cache"));
+  for(let i=0;i<todos.length;i++) {
+    if (todos[i].id == todoId) {
+      // Found todo to update
+      await updateTodo(todos[i].id, todos[i].title, !todos[i].done);
+      todoItemState = !todos[i].done;
+      couldUpdateTodo = true;
+    }
+  }
+
+  if (couldUpdateTodo) {
+    // Update UI
+    todoItemContainer.parentNode.childNodes[1].style = todoItemState ? "text-decoration: line-through" : "";
+  }
+
 }
 
 export async function syncOfflineTodos(loadingContainer, errorContainer) {
