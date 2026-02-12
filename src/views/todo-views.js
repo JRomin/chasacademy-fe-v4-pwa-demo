@@ -3,7 +3,7 @@ import { setTodoItemDone } from "../service/todo-service";
 export function createTodoElement(todo) {
   const li = document.createElement("li");
 
-  li.className = "list-group-item";
+  li.className = "list-group-item d-flex justify-content-between align-items-center";
 
   const input = document.createElement("input");
   input.type = "checkbox";
@@ -15,10 +15,17 @@ export function createTodoElement(todo) {
 
   const span = document.createElement('span');
   span.style = todo.done ? "text-decoration: line-through" : "";
+  span.classList.add("ms-2");
+  span.classList.add("me-auto");
   span.innerHTML = todo.title;
+
+  const deleteIcon = document.createElement('i');
+  deleteIcon.classList.add('bi');
+  deleteIcon.classList.add('bi-trash');
 
   li.appendChild(input);
   li.appendChild(span);
+  li.appendChild(deleteIcon);
 
   return li;
 }
