@@ -50,11 +50,40 @@ export async function updateTodo(todoId, todoTitle, isChecked) {
     for(let i=0;i<offlineQueue.length;i++) {
       let currentSyncItem = offlineQueue[i];
       if (currentSyncItem.syncId === todoId) syncItemFound = true;
+      currentSyncItem.todoItem.done = isChecked;
     }
 
     if (!syncItemFound) {
       console.log("Add sync item with id: "+todoId);
-      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId});
+      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: "update"});
+    }
+
+    localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
+    throw error;
+  }
+}
+
+export async function deleteTodo(todoId) {
+    try {
+    const rawResponse = await apiRequest(`${API_URL}/${todoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  catch (error) {
+    let offlineQueue = JSON.parse(localStorage.getItem("todos-queue")) || [];
+    let syncItemFound = false;
+    for(let i=0;i<offlineQueue.length;i++) {
+      let currentSyncItem = offlineQueue[i];
+      if (currentSyncItem.syncId === todoId) syncItemFound = true;
+    }
+
+    if (!syncItemFound) {
+      console.log("Add sync item with id: "+todoId);
+      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: "delete"});
     }
 
     localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
@@ -84,7 +113,7 @@ export async function createTodo(todoId, todoTitle, isChecked  ) {
 
     if (!syncItemFound) {
       console.log("Add sync item with id: "+todoId);
-      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId});
+      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: 'create'});
     }
 
     localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
