@@ -12,9 +12,9 @@ document.querySelector('#app').innerHTML = `
   <div class="container">
     <div id="errorContainer" class="alert alert-danger invisible d-none" role="alert"></div>
     <h1>Today!</h1>
-    <div class="input-group">
+    <div class="input-group align-items-center">
     <label class="form-label" for="colorMode">Färg-läge:</label>
-      <select class="form-select" id="colorMode">
+      <select class="form-select ms-2" id="colorMode">
         <option value="light">Ljus</option>
         <option value="dark">Mörk</option>
       </select>
