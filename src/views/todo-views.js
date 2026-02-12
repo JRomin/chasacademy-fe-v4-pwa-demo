@@ -1,4 +1,4 @@
-import { setTodoItemDone } from "../service/todo-service";
+import { deleteTodoItem, setTodoItemDone } from "../service/todo-service";
 
 export function createTodoElement(todo) {
   const li = document.createElement("li");
@@ -22,12 +22,24 @@ export function createTodoElement(todo) {
   const deleteIcon = document.createElement('i');
   deleteIcon.classList.add('bi');
   deleteIcon.classList.add('bi-trash');
+  deleteIcon.dataset.todoId = todo.id;
+  deleteIcon.onclick = async function() {
+    let loadingContainer = document.getElementById('loadingContainer');
+    let errorContainer = document.getElementById('errorContainer');
+    await deleteTodoItem(this, loadingContainer, errorContainer);
+  }
 
   li.appendChild(input);
   li.appendChild(span);
   li.appendChild(deleteIcon);
 
   return li;
+}
+
+export function clearTodoList() {
+  const list = document.getElementById("todos");
+  // Clears all childNodes
+  list.replaceChildren();
 }
 
 export function renderTodos(todos) {
