@@ -1,5 +1,5 @@
-import { createTodo, getTodos, updateTodo } from '../api/todo-api.js'
-import { renderTodos } from '../views/todo-views.js';
+import { createTodo, getTodos, updateTodo, deleteTodo } from '../api/todo-api.js'
+import { clearTodoList, renderTodos } from '../views/todo-views.js';
 
 export async function loadTodos(loadingContainer, errorContainer, page = 0, pageSize = 5) {
   try {
@@ -49,7 +49,15 @@ export async function setTodoItemDone(todoItemContainer) {
     // Update UI
     todoItemContainer.parentNode.childNodes[1].style = todoItemState ? "text-decoration: line-through" : "";
   }
+}
 
+export async function deleteTodoItem(todoItemContainer, loadingContainer, errorContainer) {
+  console.log(todoItemContainer.dataset);
+  let todoId = todoItemContainer.dataset.todoId;
+  await deleteTodo(todoId);
+  console.log("Reload todos!");
+  clearTodoList();
+  await loadTodos(loadingContainer, errorContainer);
 }
 
 export async function syncOfflineTodos(loadingContainer, errorContainer) {
@@ -60,7 +68,9 @@ export async function syncOfflineTodos(loadingContainer, errorContainer) {
   for(let i=0;i<offlineCache.length;i++) {
     let currentTodoItem = offlineCache[i];
     try {
-      await createTodo(currentTodoItem.todoItem.id, currentTodoItem.todoItem.title, currentTodoItem.todoItem.done);
+      if (currentTodoItem.syncOperation == 'create') {
+        await createTodo(currentTodoItem.todoItem.id, currentTodoItem.todoItem.title, currentTodoItem.todoItem.done);
+      }
     } catch(error) {
       syncFailed = true;
       currentTodoItem.retries++;
