@@ -15,6 +15,9 @@ export const restHandlers = [
   http.get('http://localhost:3001/todos', () => {
     return HttpResponse.json(posts)
   }),
+  http.post('http://localhost:3001/todos', () => {
+      return HttpResponse.json([])
+  })
 ]
 
 const server = setupServer(...restHandlers)

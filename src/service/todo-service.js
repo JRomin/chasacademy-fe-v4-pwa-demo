@@ -2,27 +2,51 @@ import { createTodo, getTodos, updateTodo, deleteTodo } from '../api/todo-api.js
 import { clearTodoList, renderTodos } from '../views/todo-views.js';
 
 export async function loadTodos(loadingContainer, errorContainer, page = 0, pageSize = 5) {
-  try {
+  let todos = []  
     loadingContainer.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span role="status">Loading</span>';
-    let todos = await getTodos();
-    todos = todos.slice(page * pageSize, (page+1)*pageSize);
-    renderTodos(todos);
+    try {
+      todos = await getTodos();
+    } catch(error) {
+      if (error instanceof TypeError) {
+        todos = localStorage.setItem('todos-cache', JSON.stringify(todos));
+      }
+      else {
+          loadingContainer.innerHTML = '';
+          errorContainer.classList.remove('invisible');
+          errorContainer.classList.remove('d-none');
+          errorContainer.innerHTML = error.message;
+      }
+    }
+    
+    if (todos.length > 0) {
+      todos = todos.slice(page * pageSize, (page+1)*pageSize);
+      renderTodos(todos);
+    }
     loadingContainer.innerHTML = '';
-  } catch (error) {
-    loadingContainer.innerHTML = '';
-    errorContainer.classList.remove('invisible');
-    errorContainer.classList.remove('d-none');
-    errorContainer.innerHTML = error.message;
-  }
 }
 
 export async function saveTodo(todoContainer) {
+    let todoTitle = todoContainer.querySelector('#title').value;
+    let todoDescription = todoContainer.querySelector('#description').value;
+      let newTodoItem = {id: self.crypto.randomUUID(), title: todoTitle, done: false};
     try {
-        let todoTitle = todoContainer.querySelector('#title').value;
-        let todoDescription = todoContainer.querySelector('#description').value;
-        await createTodo(self.crypto.randomUUID(), todoTitle, false);
+
+        await createTodo(newTodoItem.id, newTodoItem.title, newTodoItem.done);
         document.getElementById('addContainer').innerHTML = '';
     } catch (error) {
+      let offlineQueue = JSON.parse(localStorage.getItem("todos-queue")) || [];
+      let syncItemFound = false;
+      for(let i=0;i<offlineQueue.length;i++) {
+        let currentSyncItem = offlineQueue[i];
+        if (currentSyncItem.syncId === todoId) syncItemFound = true;
+      }
+
+      if (!syncItemFound) {
+        console.log("Add sync item with id: "+todoId);
+        offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: 'create'});
+      }
+
+      localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
       console.error(error);
       errorContainer.classList.remove('invisible');
       errorContainer.classList.remove('d-none');

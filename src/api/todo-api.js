@@ -3,17 +3,10 @@ const API_URL = "http://localhost:3001/todos";
 export async function getTodos() {
   try {
     const todos = await apiRequest(API_URL);
-    localStorage.setItem('todos-cache', JSON.stringify(todos));
     return todos;
 
   } catch (error) {
-    if (error instanceof TypeError) {
-      console.error("Failed to fetch todos:", error);
-      return JSON.parse(localStorage.getItem('todos-cache')) || [];
-    }
-    else {
-      throw error;
-    }
+    throw error;
   }
 }
 
@@ -103,21 +96,9 @@ export async function createTodo(todoId, todoTitle, isChecked  ) {
       },
       body: JSON.stringify(newTodoItem)
     });
+    return rawResponse;
   }
   catch (error) {
-    let offlineQueue = JSON.parse(localStorage.getItem("todos-queue")) || [];
-    let syncItemFound = false;
-    for(let i=0;i<offlineQueue.length;i++) {
-      let currentSyncItem = offlineQueue[i];
-      if (currentSyncItem.syncId === todoId) syncItemFound = true;
-    }
-
-    if (!syncItemFound) {
-      console.log("Add sync item with id: "+todoId);
-      offlineQueue.push({todoItem: newTodoItem, retires: 0, syncId: todoId, syncOperation: 'create'});
-    }
-
-    localStorage.setItem("todos-queue", JSON.stringify(offlineQueue));
     throw error;
   }
 }
