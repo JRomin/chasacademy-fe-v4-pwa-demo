@@ -86,7 +86,7 @@ export async function deleteTodo(todoId) {
 }
 
 export async function createTodo(todoId, todoTitle, isChecked  ) {
-  let newTodoItem = {id: todoId, title: todoTitle, done: isChecked};
+  let newTodoItem = {id: crypto.randomUUID(), title: todoTitle, done: isChecked};
   try {
     const rawResponse = await apiRequest(API_URL, {
       method: 'POST',

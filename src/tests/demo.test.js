@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { createTodo, getTodos } from "../api/todo-api";
 import { randomUUID } from "crypto"
 import { error } from "console";
@@ -15,7 +15,7 @@ test('Hämta todos', async () => {
 
 test('Spara en todo', async () => {
     // Testa att skapa en todo och se att mock lagret hanterar det.
-    let todoToCreate = {id: randomUUID(), title: 'Create from testcase', done: false};
-    let response = await createTodo(todoToCreate.id, todoToCreate.title, todoToCreate.done);
-    expect(response).toStrictEqual([])
+    let todoToCreate = {id: randomUUID(), titletodoToCreate: 'Create from testcase', done: false};
+    let response = await createTodo('', todoToCreate.title, todoToCreate.done);
+    expect(response.id).toBe('47cf7acf-d0ff-42da-9e85-70e92f062dd7')
 });
