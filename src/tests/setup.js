@@ -16,7 +16,11 @@ export const restHandlers = [
     return HttpResponse.json(posts)
   }),
   http.post('http://localhost:3001/todos', () => {
-      return HttpResponse.json([])
+      return HttpResponse.json({
+        id: "47cf7acf-d0ff-42da-9e85-70e92f062dd7",
+        title: "Test for create",
+        done: false
+      })
   })
 ]
 
